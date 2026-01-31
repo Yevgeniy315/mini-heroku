@@ -16,7 +16,7 @@ def get_db_connection():
 
 @app.get("/")
 def root():
-    return {"status": "Backend is working"}
+    return {"status": "Backend кis working"}
 
 
 @app.get("/db")
