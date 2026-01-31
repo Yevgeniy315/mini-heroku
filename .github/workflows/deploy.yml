@@ -19,10 +19,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
 
-          cat << 'EOF' > ~/.ssh/key.pem
-${{ secrets.SSH_PRIVATE_KEY }}
-EOF
-
+          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/key.pem
           chmod 600 ~/.ssh/key.pem
 
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
@@ -30,7 +27,7 @@ EOF
 
       - name: Deploy
         run: |
-          ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
 
           cd /home/ec2-user/mini-heroku
           git pull origin main
