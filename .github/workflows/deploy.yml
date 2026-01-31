@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+
+      - name: Checkout code
         uses: actions/checkout@v4
 
 
@@ -24,10 +25,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
 
-      - name: Deploy to server
+      - name: Deploy
         run: |
-          ssh -i ~/.ssh/key.pem -o StrictHostKeyChecking=no \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
 
           cd /home/ec2-user/mini-heroku
           git pull origin main
@@ -35,5 +35,4 @@ jobs:
           docker compose up -d --build
 
           EOF
-
 
