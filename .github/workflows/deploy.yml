@@ -12,7 +12,7 @@ jobs:
 
     steps:
 
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
 
@@ -20,17 +20,16 @@ jobs:
         run: |
           mkdir -p ~/.ssh
 
-          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" \
-            | tr -d '\r' > ~/.ssh/key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/key.pem
 
           chmod 600 ~/.ssh/key.pem
 
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
 
-      - name: Deploy to server
+      - name: Deploy
         run: |
-          ssh -vvv -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
 
           cd /home/ec2-user/mini-heroku
           git pull origin main
