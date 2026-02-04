@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh -vvv -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
 
           cd /home/ec2-user/mini-heroku
           git pull origin main
