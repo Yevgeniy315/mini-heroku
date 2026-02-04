@@ -1,9 +1,8 @@
-name: Deploy to EC2
+name: Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,15 +11,14 @@ jobs:
 
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
 
-          echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/key.pem
+          echo "${{ secrets.SSH_KEY_B64 }}" | base64 -d > ~/.ssh/key.pem
 
           chmod 600 ~/.ssh/key.pem
 
@@ -32,7 +30,7 @@ jobs:
           ssh -i ~/.ssh/key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
 
           cd /home/ec2-user/mini-heroku
-          git pull origin main
+          git pull
           docker compose down
           docker compose up -d --build
 
